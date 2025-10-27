@@ -13,7 +13,7 @@ pipeline {
       steps {
         sh '''
         echo ${GH_TOKEN} | podman login ghcr.io -u ${GH_USER} --password-stdin
-        podman push $IMAGE:$BUILD_NUMBER
+        podman push ghcr.io/${GH_USER}/flask-demo:${BUILD_NUMBER}
         '''
       }
     }
@@ -25,7 +25,7 @@ pipeline {
         sed -i.bak "s|image: .*|image: $IMAGE:$BUILD_NUMBER|g" k8s/deployment.yaml
         git add k8s/deployment.yaml
         git config user.email "jenkins@local"
-        git config user.name "jenkins"
+        git config user.name "mjadar"
         git commit -m "ci: update image to $IMAGE:$BUILD_NUMBER" || true
         git push
         '''
